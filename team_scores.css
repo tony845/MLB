@@ -37,3 +37,38 @@ tbody tr:nth-of-type(odd){
 	font-size:medium;
 	padding-left:5px;
 }
+
+/*#pagenav{
+	margin-left:5px;
+	padding-left:0px;
+	margin-bottom:5px;
+	position:fixed;
+}*/
+
+#pagenav li{
+	/*display:inline;*/
+	/*padding:5px 5px 5px 5px;*/
+	padding: 0px 0px 5px 5px;
+	font-size:1.25em;
+	cursor:pointer;
+	border-radius:2px;
+	margin-right:10px;
+	font-weight:bold;
+	list-style-type:none;
+}
+
+#pagenav a{
+	color: inherit;
+	text-decoration:none;
+}
+
+.selected{
+	color:black;
+	background:#e3f3f7;
+	border-radius:3px;
+	box-shadow:3px 3px 8px
+}
+
+#pagenav li:hover{
+	text-shadow:1px 1px 3px #adabab;
+}

@@ -1,3 +1,7 @@
+body{
+	/*font-family: Calibri, "Times New Roman", Times, serif;*/
+}
+
 table, th, td {
 	/*border-spacing: 5px;*/
 	/*border: 1px solid black;*/
@@ -15,8 +19,31 @@ tbody tr:nth-of-type(odd){
 	background-color: #eee;
 }
 
+#pagenav{
+	margin-left:5px;
+	padding-left:0px;
+	margin-bottom:5px;
+	position:fixed;
+}
+
+#pagenav li{
+	display:inline;
+	padding:5px 5px 5px 5px;
+	font-size:1.25em;
+	cursor:pointer;
+	border-radius:2px;
+	margin-right:10px;
+	font-weight:bold;
+}
+
+#pagenav a{
+	color: inherit;
+	text-decoration:none;
+}
+
 #datepicker{
-	margin-top:16px;
+	margin-top:70px;
+	margin-left:5px;
 	position:fixed;
 }
 
@@ -31,7 +58,7 @@ tbody tr:nth-of-type(odd){
 }*/
 
 #navbar{
-	margin-top:190px;
+	margin-top:245px;
 	margin-left:0px;
 	padding-left:120px;
 	position:fixed;
@@ -40,8 +67,8 @@ tbody tr:nth-of-type(odd){
 }
 
 #teams{
-	margin-top:265px;
-	margin-left:70px;
+	margin-top:320px;
+	margin-left:85px;
 	position:fixed;
 	font-size:11pt;
 }
@@ -65,7 +92,7 @@ tbody tr:nth-of-type(odd){
 	margin-bottom:7px;
 }
 
-#navbar li:hover{
+#navbar li:hover, #pagenav li:hover{
 	text-shadow:1px 1px 3px #adabab;
 }
 
@@ -80,7 +107,8 @@ tbody tr:nth-of-type(odd){
 }
 
 #chart{
-	height:500px;
+	margin-top:16px;
+	height:750px;
 	overflow:auto;
 	display:inline-block;		/*http://stackoverflow.com/questions/9189810/css-display-inline-vs-inline-block*/
 }
