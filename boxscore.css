@@ -1,5 +1,6 @@
 body{
 	/*font-family: Calibri, "Times New Roman", Times, serif;*/
+	background-image: url("gradient-grey-white-linear-1920x1080-c2-808080-ffffff-a-15-f-14.svg");
 }
 
 table, th, td {
@@ -17,6 +18,10 @@ table, th, td {
 
 tbody tr:nth-of-type(odd){
 	background-color: #eee;
+}
+
+tbody tr:nth-of-type(even){
+	background-color: white;
 }
 
 #pagenav{
