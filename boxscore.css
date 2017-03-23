@@ -1,6 +1,7 @@
 body{
 	/*font-family: Calibri, "Times New Roman", Times, serif;*/
 	background-image: url("gradient-grey-white-linear-1920x1080-c2-808080-ffffff-a-15-f-14.svg");
+	background-attachment:fixed;
 }
 
 table, th, td {
@@ -114,8 +115,11 @@ tbody tr:nth-of-type(even){
 #chart{
 	margin-top:16px;
 	height:750px;
-	overflow:auto;
+	/*overflow:auto;*/
+	overflow-x:hidden;
+	overflow-y:auto;
 	display:inline-block;		/*http://stackoverflow.com/questions/9189810/css-display-inline-vs-inline-block*/
+	padding-right:5px;
 }
 
 #chart tbody tr:hover{
