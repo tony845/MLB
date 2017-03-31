@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		<link type="text/css" rel="stylesheet" href="team_scores_INPUT_FILE.css"/>
+		<link rel="stylesheet" href="jquery-ui.min.css">
+		<meta charset="utf-8">
+		<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="jquery-ui.min.js"></script>
+		<script type="text/javascript" src="team_scores.js"></script>
+		<script src="jquery.floatThead.js"></script>		<!--http://mkoryak.github.io/floatThead/#intro (other option https://datatables.net/) -->
+		
+		<title>Baseball Pool</title>
+	</head>
+	<body>		
+		<div id="right_side">
+			<h3>Date:  &nbsp;<input type="text" value="03/01/2017" maxlength="10" size="10"  id="datepicker"></h3>
+			
+			<!-- form sumbit using jquery : https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications-->
+			<!-- also try onclick()-->
+			<!--  FileReader API,  http://stackoverflow.com/questions/12281775/get-data-from-file-input-in-jquery   &  https://mounirmesselmeni.github.io/2012/11/20/reading-csv-file-with-javascript-and-html5-file-api/-->
+			<!-- filereader.onload(function() {FileReader.readAsText()});  http://stackoverflow.com/questions/13729301/html5-file-api-how-to-see-the-result-of-readastext -->
+			<form id="usernames0">
+				<input type="file" id="usernames">
+				<!--<br><br>
+				<input type="submit" id="fname2">-->
+			</form>
+			
+			<br>
+			<ul id="pagenav">
+				<li><a href="boxscore.html">Boxscores</a></li>
+				<li class="selected">Runs Pool</li>
+			</ul>
+		</div>
+		
+		<table id="teams">
+			<thead>
+				<tr>
+					<th>Team</th>
+					<th>0</th>
+					<th>1</th>
+					<th>2</th>
+					<th>3</th>
+					<th>4</th>
+					<th>5</th>
+					<th>6</th>
+					<th>7</th>
+					<th>8</th>
+					<th>9</th>
+					<th>10</th>
+					<th>11</th>
+					<th>12</th>
+					<th>13</th>
+					<th>Count</th>
+				</tr>
+			</thead>	
+			<tbody>
+
+			</tbody>
+		</table>
+
+		
+	</body>
+</html>
