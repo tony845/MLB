@@ -11,6 +11,7 @@ $(document).ready(function(){
 		
 	GetScoresSince($( "#datepicker" ).datepicker( "getDate" ));
 	
+	
 	function GetScoresSince(boxdate){
 		var today = new Date();
 		today.setDate(today.getDate()-1);
@@ -89,5 +90,26 @@ $(document).ready(function(){
 		});
 		return deferred;
 	};
+	
+	
+	$("#usernames").change(function(){		
+		var reader = new FileReader();
+		
+		reader.onload = function(){
+			console.log(reader);
+			//console.log(reader.result);
+			console.log("reader onload");
+		};
+		
+		var selectedFile = document.getElementById('usernames').files[0];
+		//var selectedFile = this.files[0];							//ALTERNATIVE
+		//var selectedFile = $("#usernames")[0].files[0];	//ALTERNATIVE
+		//console.log(selectedFile);
+		
+		reader.readAsText(selectedFile);
+
+	});
+	
+
 	
 });
