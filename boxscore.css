@@ -64,7 +64,7 @@ tbody tr:nth-of-type(even){
 }*/
 
 #navbar{
-	margin-top:245px;
+	margin-top:260px;
 	margin-left:0px;
 	padding-left:120px;
 	position:fixed;
@@ -73,7 +73,7 @@ tbody tr:nth-of-type(even){
 }
 
 #teams{
-	margin-top:320px;
+	margin-top:335px;
 	margin-left:85px;
 	position:fixed;
 	font-size:11pt;
