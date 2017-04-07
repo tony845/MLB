@@ -4,6 +4,7 @@ $(document).ready(function(){
 	var players={"batters":[], "pitchers":[], "teams":[]};
 	var fields_b = ["name_display_first_last","team","ab","r","h","rbi","bb","so","sb","d","t","hr","avg","s_hr","s_r","s_rbi"];
 	var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era"];
+	var prev_team;
 	
 	$( "#datepicker" ).datepicker(
 		{defaultDate: -1,
@@ -207,10 +208,24 @@ $(document).ready(function(){
 
 	$("#teams").change(function(){
 		var team = $("#teams").val();
+		//console.log(team);
 		
 		$("#chart tbody tr" ).show();
-		if (team != "All") $("#chart tbody tr:not(." + team +")" ).hide();
-	
+		
+		if (team != "All") {
+			$("#chart tbody tr:not(." + team +")" ).hide();
+			
+			//http://stackoverflow.com/questions/5545649/can-i-combine-nth-child-or-nth-of-type-with-an-arbitrary-selector			
+			$("#chart tbody tr." + team + ":even").css("background-color" , "#eee");		//https://api.jquery.com/even-selector/
+			$("#chart tbody tr." + team + ":odd").css("background-color" , "white");
+		}
+		
+		if (prev_team!=null && prev_team!="All"){
+			//$("#chart tbody tr." + prev_team).removeAttr("style");
+			$("#chart tbody tr." + prev_team).css("background-color" , "");
+		}
+		prev_team=team;
+		
 	});	
 		
 });
