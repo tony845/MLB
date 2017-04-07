@@ -32,11 +32,13 @@ $(document).ready(function(){
 			players={"batters":[], "pitchers":[], "teams":[]};	//reset
 			var calls=[];
 			for (var i = 0; i<data.data.games.game.length; i++){
-				var path_game =  "http://gd2.mlb.com/" + data.data.games.game[i].game_data_directory + "/boxscore.json";
-				calls.push(GetGameData(path_game, players));	//put all function calls (deferred objects) into array to run logic once all are done (cause getJSON is asynchronous)
-			}
+				if (data.data.games.game[i].status=="Final"){
+					var path_game =  "http://gd2.mlb.com/" + data.data.games.game[i].game_data_directory + "/boxscore.json";
+					calls.push(GetGameData(path_game, players));	//put all function calls (deferred objects) into array to run logic once all are done (cause getJSON is asynchronous)
+				}
+			}			
 			
-			$.when.apply($, calls).done(function(){				//APPLY: http://stackoverflow.com/questions/5627284/pass-in-an-array-of-deferreds-to-when
+			$.when.apply($, calls).done(function(){				//APPLY: http://stackoverflow.com/questions/5627284/pass-in-an-array-of-deferreds-to-when  WHEN: https://api.jquery.com/jquery.when/
 				console.log("done:" + players.batters.length);
 				//console.log(calls);
 				$("#chart tbody").empty();
@@ -61,9 +63,8 @@ $(document).ready(function(){
 	};
 	
 	function GetGameData(path, players){
-		var deferred = $.getJSON(path, function(data) {		//https://api.jquery.com/category/deferred-object/
-			console.log( "success1" );
-			
+		var deferred = $.getJSON(path, function(data) {		//https://api.jquery.com/category/deferred-object/  &  http://api.jquery.com/jquery.ajax/
+
 			for (var i =0; i<=1; i++){			//add team names
 				for (var j=0; j<data.data.boxscore.batting[i].batter.length; j++){
 					data.data.boxscore.batting[i].batter[j].team = data.data.boxscore.batting[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
@@ -82,7 +83,13 @@ $(document).ready(function(){
 		}).done(function(){
 			//console.log(players.batters.length);
 			//return players.batters.length;
+			})
+			.error(function(data, status){
+				//console.log("error");
+				//console.log(status);
 			});
+		//console.log("statustext:");
+		//console.log(deferred);
 		return deferred;	
 	};
 	
