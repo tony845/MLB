@@ -80,12 +80,14 @@ $(document).ready(function(){
 				if (!teams[game.home_team_city]) teams[game.home_team_city]=[];
 				if (!teams[game.away_team_city]) teams[game.away_team_city]=[];
 				
-				game.home_team_runs = Math.min(game.home_team_runs, 13);
-				game.away_team_runs = Math.min(game.away_team_runs, 13);
-				if (teams[game.home_team_city][game.home_team_runs]==null || game.original_date < teams[game.home_team_city][game.home_team_runs]){
+				//game.home_team_runs = Math.min(game.home_team_runs, 13);
+				//game.away_team_runs = Math.min(game.away_team_runs, 13);
+				if ((teams[game.home_team_city][game.home_team_runs]==null || game.original_date < teams[game.home_team_city][game.home_team_runs])
+					&& game.home_team_runs<=13){
 					teams[game.home_team_city][game.home_team_runs] = game.original_date;
 				}
-				if (teams[game.away_team_city][game.away_team_runs]==null || game.original_date < teams[game.away_team_city][game.away_team_runs]){
+				if ((teams[game.away_team_city][game.away_team_runs]==null || game.original_date < teams[game.away_team_city][game.away_team_runs])
+					&& game.away_team_runs<=13){
 					teams[game.away_team_city][game.away_team_runs] = game.original_date;
 				}
 			}
