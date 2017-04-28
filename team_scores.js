@@ -48,17 +48,36 @@ $(document).ready(function(){
 				}
 				row = row + "<td>" + team.count + "</td></tr>";
 			}
-			
-			/*
-			for (var prop in teams){
-				if (teams[prop].length<14) teams[prop][13]="";		//to force an array of 0-13
-				var row = row + "<tr>" + "<td>" + prop + "</td>";
-				for (i=0; i<teams[prop].length; i++){ 
-					row += "<td>" + (teams[prop][i]==null? "" : teams[prop][i].slice(5)) + "</td>";
-				}
-				row = row + "</tr>";
-			}*/
 			$("#teams tbody").append(row);
+			
+			if (document.location.href.endsWith("phoenix.html")){
+				
+				var winners = arrTeams.filter(function(team){return team.count >= 13}).slice(0,3);		//take the top 3 winners
+				//console.log(winners);
+				
+				if (winners.length>0){
+					winners.forEach(function(rec){
+						//rec.maxDate = Math.max(...rec.scores);	//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
+						rec.maxDate = rec.scores.reduce(function(max, curr){return curr > max ? curr : max});
+						//console.log(rec);
+					});	//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach  
+					
+					winners.sort(function(a,b){ return a.maxDate < b.maxDate ? -1 : a.maxDate > b.maxDate ? 1 : 0});
+					
+					row="";
+					winners.forEach(function(team, i){
+						switch(i){
+							case 0: var place="Winner: "; break;
+							case 1: place = "Second: "; break;
+							case 2: place = "Third: "; break;
+						}
+						row += "<tr><td>" + place + "</td><td>" + names[team.name]  +  " </td><td>" + team.maxDate.slice(5) + "</td></tr>";
+					});
+					
+					$("#winners tbody").append(row);
+					$("#winners").show();
+				}
+			}
 		});
 	}
 	

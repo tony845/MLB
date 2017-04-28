@@ -13,7 +13,7 @@
 	border-bottom: 1px solid;
 }
 
-tbody tr:nth-of-type(odd){
+#teams tbody tr:nth-of-type(odd){
 	background-color: #eee;
 }
 
@@ -71,4 +71,20 @@ tbody tr:nth-of-type(odd){
 
 #pagenav li:hover{
 	text-shadow:1px 1px 3px #adabab;
+}
+
+#winners{
+	margin-left: 40%;
+	font-weight: bold;
+	font-size:x-large;
+	text-align: center;
+	border-collapse: collapse;
+	border: 1px solid;
+	display:none;
+}
+
+#winners td{
+	border: 1px solid;
+	padding-left: 10px;
+	padding-right: 10px;
 }
