@@ -207,11 +207,7 @@ $(document).ready(function(){
 		}
 		
 		//$("#teams").val("All");
-		if ( $("#teams").val() != "All") {
-			FilterTeam();
-			$("#chart tbody tr." + $("#teams").val() + ":even").css("background-color" , "#eee");		//https://api.jquery.com/even-selector/
-			$("#chart tbody tr." + $("#teams").val() + ":odd").css("background-color" , "white");
-		}
+		if ( $("#teams").val() != "All") FilterTeam();
 		
 	}); 
 	
@@ -231,7 +227,7 @@ $(document).ready(function(){
 			$("#chart tbody tr." + team + ":odd").css("background-color" , "white");
 		}
 		
-		if (prev_team!=null && prev_team!="All"){
+		if (prev_team!=null && prev_team!="All" && prev_team!=team){
 			//$("#chart tbody tr." + prev_team).removeAttr("style");
 			$("#chart tbody tr." + prev_team).css("background-color" , "");
 		}
