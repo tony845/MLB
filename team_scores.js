@@ -52,14 +52,14 @@ $(document).ready(function(){
 			
 			if (document.location.href.endsWith("phoenix.html")){
 				
-				var winners = arrTeams.filter(function(team){return team.count >= 13}).slice(0,3);		//take the top 3 winners
+				var winners = arrTeams.filter(function(team){return team.count >= 14}).slice(0,3);		//take the top 3 winners
 				//console.log(winners);
 				
 				if (winners.length>0){
-					winners.forEach(function(rec){
-						//rec.maxDate = Math.max(...rec.scores);	//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
-						rec.maxDate = rec.scores.reduce(function(max, curr){return curr > max ? curr : max});
-						//console.log(rec);
+					winners.forEach(function(team){
+						//team.maxDate = Math.max(...team.scores);	//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator
+						team.maxDate = team.scores.reduce(function(max, curr){return curr > max ? curr : max});
+						//console.log(team);
 					});	//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach  
 					
 					winners.sort(function(a,b){ return a.maxDate < b.maxDate ? -1 : a.maxDate > b.maxDate ? 1 : 0});

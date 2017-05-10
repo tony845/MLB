@@ -123,7 +123,9 @@ tbody tr:nth-of-type(even){
 }
 
 #chart tbody tr:hover{
-	font-weight: bold;
+	/*font-weight: bold;*/
+	/*color:blue;*/
+	background-color:#FCFBD0;
 }
 
 #chart th:hover{

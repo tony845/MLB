@@ -18,7 +18,8 @@
 }
 
 #teams tbody tr:hover{
-	font-weight: bold;
+	/*font-weight: bold;*/
+	background-color:#FCFBD0;
 }
 
 #right_side{

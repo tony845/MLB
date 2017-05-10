@@ -170,6 +170,7 @@ $(document).ready(function(){
 		$("#navbar li:nth-child(2)").addClass("selected");
 	});
 	
+	
 	$("#chart th").click(function(){
 		//console.log($(this).get(0))				//https://api.jquery.com/get/
 		var field = $(this).get(0).innerHTML;	//https://www.w3schools.com/jsref/dom_obj_all.asp
@@ -204,9 +205,19 @@ $(document).ready(function(){
 			$("#b_body").empty();
 			$("#b_body").append(WriteBatters(fields_b, arr ));
 		}
-	});
-
-	$("#teams").change(function(){
+		
+		//$("#teams").val("All");
+		if ( $("#teams").val() != "All") {
+			FilterTeam();
+			$("#chart tbody tr." + $("#teams").val() + ":even").css("background-color" , "#eee");		//https://api.jquery.com/even-selector/
+			$("#chart tbody tr." + $("#teams").val() + ":odd").css("background-color" , "white");
+		}
+		
+	}); 
+	
+	$("#teams").change(FilterTeam);
+	
+	function FilterTeam(){
 		var team = $("#teams").val();
 		//console.log(team);
 		
@@ -225,7 +236,6 @@ $(document).ready(function(){
 			$("#chart tbody tr." + prev_team).css("background-color" , "");
 		}
 		prev_team=team;
-		
-	});	
-		
+	};
+	
 });
