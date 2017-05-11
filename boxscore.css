@@ -25,6 +25,27 @@ tbody tr:nth-of-type(even){
 	background-color: white;
 }
 
+#b_body tr td:nth-of-type(13){
+	border-left:1px solid;
+}
+
+#p_body tr td:nth-of-type(9){
+	border-left:1px solid;
+}
+
+td a:link{			/*https://www.w3schools.com/css/css_link.asp*/
+	color:black;
+    text-decoration: none;
+}
+
+td a:visited{
+	color:purple;
+}
+
+td a:hover{
+	color:blue;
+}
+
 #pagenav{
 	margin-left:5px;
 	padding-left:0px;

@@ -2,8 +2,8 @@ $(document).ready(function(){
 	//http://m.mlb.com/gameday/red-sox-vs-yankees/2016/07/15/448204#game=448204,game_state=final,game_tab=box
 	
 	var players={"batters":[], "pitchers":[], "teams":[]};
-	var fields_b = ["name_display_first_last","team","ab","r","h","rbi","bb","so","sb","d","t","hr","avg","s_hr","s_r","s_rbi"];
-	var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era"];
+	var fields_b = ["name_display_first_last","team","ab","r","h","rbi","bb","so","sb","d","t","hr","avg","s_hr","s_r","s_rbi","obp","slg","s_so"];
+	var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era","s_ip","s_so","w","sv","hld"];
 	var prev_team;
 	
 	$( "#datepicker" ).datepicker(
@@ -70,8 +70,12 @@ $(document).ready(function(){
 				for (var j=0; j<data.data.boxscore.batting[i].batter.length; j++){
 					data.data.boxscore.batting[i].batter[j].team = data.data.boxscore.batting[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
 				}
-				for (j=0; j<data.data.boxscore.pitching[i].pitcher.length; j++){
-					data.data.boxscore.pitching[i].pitcher[j].team = data.data.boxscore.pitching[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
+				if (Array.isArray(data.data.boxscore.pitching[i].pitcher)){
+					for (j=0; j<data.data.boxscore.pitching[i].pitcher.length; j++){
+						data.data.boxscore.pitching[i].pitcher[j].team = data.data.boxscore.pitching[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
+					}
+				}else{		//WHEN ONE PITCHER (COMPLETE GAME) IT'S A SINGLE OBJECT INSTEAD OF ARRAY
+					data.data.boxscore.pitching[i].pitcher.team = data.data.boxscore.pitching[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
 				}
 			}
 			
@@ -99,7 +103,8 @@ $(document).ready(function(){
 			if(players[i].pos != "P") {
 				//console.log(players[i].name_display_first_last);
 				var row = row + "<tr class='" + players[i].team + "'>";
-				for (var j=0; j<fields.length; j++){
+				row += "<td><a href='http://m.mlb.com/player/" + players[i].id + "' target=_'blank'>" + players[i].name_display_first_last + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
+				for (var j=1; j<fields.length; j++){
 					row= row +  "<td>" + players[i][fields[j]] + "</td>";
 					//row= row +  "<td class=' " + players[i].team + " '>" + players[i][fields[j]] + "</td>";
 				}
@@ -111,11 +116,13 @@ $(document).ready(function(){
 	
 	function WritePitchers(fields, players){
 		for (var i=0; i<players.length; i++){
-
+			
 			var row = row + "<tr class='" + players[i].team + "'>";
-			for (var j=0; j<fields.length; j++){
+			row += "<td><a href='http://m.mlb.com/player/" + players[i].id + "' target=_'blank'>" + players[i].name_display_first_last + (players[i].note? " " + players[i].note: "")  + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
+			
+			for (var j=1; j<fields.length; j++){
 				var value = players[i][fields[j]];
-				if (players[i].note && fields[j]=="name_display_first_last") value += " " + players[i].note;
+				//if (players[i].note && fields[j]=="name_display_first_last") value += " " + players[i].note;
 				if (fields[j]=="out") value = Math.floor(value/3) + (value % 3 > 0 ? "." + value % 3 : null) ;
 				row= row +  "<td>" + value + "</td>";
 			}
@@ -187,12 +194,16 @@ $(document).ready(function(){
 				field = "t"; break;
 			case "HRs":
 				field = "s_hr"; break;
-			case "Runs":
+			case "Rs":
 				field = "s_r"; break;
 			case "RBIs":
 				field = "s_rbi"; break;
+			case "Ks":
+				field = "s_so"; break;
 			case "IP":
 				field = "out"; break;
+			case "IPs":
+				field = "s_ip"; break;
 			default:
 				field = field.toLowerCase();
 		}
