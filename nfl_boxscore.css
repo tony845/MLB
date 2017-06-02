@@ -1,0 +1,124 @@
+body{
+	/*font-family: Calibri, "Times New Roman", Times, serif;*/
+	background-image: url("gradient-grey-white-linear-1920x1080-c2-808080-ffffff-a-15-f-14.svg");
+	background-attachment:fixed;
+}
+
+table, th, td {
+	/*border-spacing: 5px;*/
+	/*border: 1px solid black;*/
+	border-collapse: collapse;
+	margin-top:0px;
+	text-align: center;
+	padding-right: 5px;
+}
+
+#headers, #chart{						/*http://stackoverflow.com/questions/4709390/table-header-to-stay-fixed-at-the-top-when-user-scrolls-it-out-of-view-with-jque */
+	display:inline-block;
+}
+
+#chart table{						/*http://stackoverflow.com/questions/4709390/table-header-to-stay-fixed-at-the-top-when-user-scrolls-it-out-of-view-with-jque */
+	display:inline-block;
+	height:750px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	margin-right:40px;
+}
+
+tbody tr:nth-of-type(odd){
+	background-color: #eee;
+}
+
+tbody tr:nth-of-type(even){
+	background-color: white;
+}
+
+td a:link{			/*https://www.w3schools.com/css/css_link.asp*/
+	color:black;
+    text-decoration: none;
+}
+
+td a:visited{
+	color:purple;
+}
+
+td a:hover{
+	color:blue;
+}
+
+#weeknums li{
+	display:inline;
+	margin-right:5px;
+	font-size:1.25em;
+	cursor:pointer;
+	border-radius:10px;
+	/*margin-right:10px;*/
+	font-weight:bold;
+}
+
+#selections{
+	/*font-size:11pt;*/
+	/*display:inline-block;*/
+	vertical-align:top;		/*https://www.w3schools.com/cssref/pr_pos_vertical-align.asp*/
+}
+
+#selections h3{
+	display:inline-block;
+	margin-right:4px;
+}
+
+#selections select{
+	font-size:12pt;
+	margin-right:10px;
+}
+
+#selections ul{
+	display:inline-block;
+	padding-left:0px;
+}
+
+#weeks{
+	display:inline-block;
+	position:absolute;		/*needs to be absolute (or relative) to work with 'left'*/
+}
+
+.selected{
+	color:black;
+	background:#e3f3f7;
+	border-radius:1px;
+	/*box-shadow:3px 3px 8px*/
+}
+
+#weeknums li:hover{
+	color:white;
+}
+
+#chart thead{
+	color:white;
+	background:black;
+	cursor:pointer;
+}
+
+#headers table{
+	color:white;
+	background:black;
+	cursor:pointer;
+	position: fixed;
+	top: 0px;
+	display:none;
+}
+
+#chart tbody tr:hover{
+	/*font-weight: bold;*/
+	/*color:blue;*/
+	background-color:#FCFBD0;
+}
+
+#headers th:hover{
+	color:black;
+	background:white;
+}
+
+.blurry{
+	filter:blur(1px);
+}
