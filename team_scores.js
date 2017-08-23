@@ -2,13 +2,20 @@ $(document).ready(function(){
 	
 	var teams={};
 	
-	$( "#datepicker" ).datepicker(
-		{defaultDate: new Date(2017,3,2), //-1,
+	var startDate = new Date();
+	startDate.setMonth(startDate.getMonth()-1);
+	startDate.setDate(1);
+	if (startDate > new Date(2017,8,1)) startDate = new Date(2017,8,1);
+	
+	$("#datepicker").val((startDate.getMonth()+1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() );	
+	
+	$("#datepicker").datepicker(
+		{defaultDate: startDate, //-1,
 			onSelect: function(dateText){
 				GetScoresSince(new Date(dateText));
 			}
 		});
-		
+	
 	GetScoresSince($( "#datepicker" ).datepicker( "getDate" ));
 	
 	
@@ -92,7 +99,9 @@ $(document).ready(function(){
 		var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
 		
 		var deferred = $.getJSON(path_day, function(json){
-	
+			
+			if (json.data.games.game==undefined) return;
+			
 			for (var i = 0; i<json.data.games.game.length; i++){
 				var game = json.data.games.game[i];
 				
