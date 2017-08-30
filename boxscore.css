@@ -38,7 +38,7 @@ td a:link{			/*https://www.w3schools.com/css/css_link.asp*/
     text-decoration: none;
 }
 
-td a:visited{
+td a:visited, #NFL:visited{
 	color:purple;
 }
 
@@ -72,6 +72,29 @@ td a:hover{
 	margin-top:70px;
 	margin-left:5px;
 	position:fixed;
+	
+	/*margin-top:16px;
+	display:inline-block;
+	float:right;*/
+	/*vertical-align:top;*/
+}
+
+#NFL{
+	/*margin-left:5px;
+	margin-top:-27px;
+	display:block;*/
+	
+	margin-top:16px;
+	display:inline-block;
+	/*text-align:right;*/
+	float:right;
+	/*vertical-align:bottom;*/
+	font-size:1.25em;
+	font-weight:bold;
+	color:#f7f6ed;
+	/*position:absolute;
+	right: 10px;*/
+	text-decoration: none;
 }
 
 /*#navbar0 li{
