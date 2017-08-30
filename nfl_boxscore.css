@@ -93,6 +93,20 @@ td a:hover{
 	color:white;
 }
 
+#MLB{
+	float:right;
+	text-align:center;
+}
+
+#MLB a:link{
+	text-decoration: none;
+	color:#f7f6ed;
+}
+
+#MLB a:visited{
+	color:purple;
+}
+
 #chart thead{
 	color:white;
 	background:black;
