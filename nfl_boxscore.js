@@ -16,8 +16,8 @@ $(document).ready(function(){
 		}
 	});
 	
-	GetDayData("http://www.nfl.com/ajax/scorestrip?season=2016&seasonType=REG&week=17");
-	/*True default*/ //GetDayData("http://www.nfl.com/liveupdate/scorestrip/ss.xml");
+	//GetDayData("http://www.nfl.com/ajax/scorestrip?season=2016&seasonType=REG&week=17");
+	/*True default*/ GetDayData("http://www.nfl.com/liveupdate/scorestrip/ss.xml");
 	
 	//GetGameData("http://www.nfl.com/liveupdate/game-center/2016091108/2016091108_gtd.json", "2016091108", players);
 	
