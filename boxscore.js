@@ -6,8 +6,13 @@ $(document).ready(function(){
 	var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era","s_ip","s_so","w","sv","hld"];
 	var prev_team;
 	
+	var startDate = new Date();
+	if (startDate > new Date(2017,9,1)) startDate = new Date(2017,9,1);		//CAP AT LAST DAY OF REGULAR SEASON
+	
+	$("#datepicker").val((startDate.getMonth()+1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() );	
+	
 	$( "#datepicker" ).datepicker(
-		{defaultDate: -1,
+		{defaultDate: startDate, //-1,
 			onSelect: function(dateText){
 				GetDayData(new Date(dateText));
 			}
@@ -29,7 +34,10 @@ $(document).ready(function(){
 		//var path = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/gid_" + date + "_bosmlb_nyamlb_1/boxscore.json";
 		var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
 		
-		$.getJSON(path_day, function(data){
+		//callback=?  https://stackoverflow.com/questions/6396623/jquery-getjson-access-control-allow-origin-issue
+		//path_day="http://gd2.mlb.com/components/game/mlb/year_2017/month_06/day_12/miniscoreboard.json?callback=jQuery1124010225989694133197_1497384738587&_=1497384738588"
+		
+		$.getJSON(path_day, function(data){									
 			players={"batters":[], "pitchers":[], "teams":[]};	//reset
 			var calls=[];
 			for (var i = 0; i<data.data.games.game.length; i++){
