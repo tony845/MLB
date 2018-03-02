@@ -1,13 +1,19 @@
+//http://statsapi.mlb.com/docs/
+//https://github.com/baseballhackday/data-and-resources/wiki/Resources-and-ideas
+
 $(document).ready(function(){
 	//http://m.mlb.com/gameday/red-sox-vs-yankees/2016/07/15/448204#game=448204,game_state=final,game_tab=box
 	
 	var players={"batters":[], "pitchers":[], "teams":[]};
-	var fields_b = ["name_display_first_last","team","ab","r","h","rbi","bb","so","sb","d","t","hr","avg","s_hr","s_r","s_rbi","obp","slg","s_so"];
-	var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era","s_ip","s_so","w","sv","hld"];
+	//var fields_b = ["name_display_first_last","team","ab","r","h","rbi","bb","so","sb","d","t","hr","avg","s_hr","s_r","s_rbi","obp","slg","s_so"];
+	//var fields_p=["name_display_first_last","team","out","h","r","er","bb","so","era","s_ip","s_so","w","sv","hld"];
+	var fields_b = ["name","team","atBats","runs","hits","rbi","baseOnBalls","strikeOuts","stolenBases","doubles","triples","homeRuns","s_avg","s_homeRuns","s_runs","s_rbi","s_obp","s_slg","s_strikeOuts"];
+	var fields_p=["name","team","inningsPitched","hits","runs","earnedRuns","baseOnBalls","strikeOuts","s_era","s_inningsPitched","s_strikeOuts","s_wins","s_saves","s_holds"];
 	var prev_team;
 	
 	var startDate = new Date();
-	if (startDate > new Date(2017,9,1)) startDate = new Date(2017,9,1);		//CAP AT LAST DAY OF REGULAR SEASON
+	startDate.setDate(startDate.getDate()-1);
+	//if (startDate > new Date(2017,9,1)) startDate = new Date(2017,9,1);		//CAP AT LAST DAY OF REGULAR SEASON
 	
 	$("#datepicker").val((startDate.getMonth()+1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() );	
 	
@@ -30,9 +36,11 @@ $(document).ready(function(){
 		if (month<10) month = "0" + month;
 		var day = today.getDate();
 		if (day<10) day = "0" + day;
-		var date = year + "_" + month + "_" + day;
-		//var path = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/gid_" + date + "_bosmlb_nyamlb_1/boxscore.json";
-		var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
+		//var date = year + "_" + month + "_" + day;
+		////var path = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/gid_" + date + "_bosmlb_nyamlb_1/boxscore.json";
+		//var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
+		var date = month + "/" + day + "/" + year;
+		var path_day = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=" + date + "&fields=dates,games,gamePk,status,codedGameState";
 		
 		//callback=?  https://stackoverflow.com/questions/6396623/jquery-getjson-access-control-allow-origin-issue
 		//path_day="http://gd2.mlb.com/components/game/mlb/year_2017/month_06/day_12/miniscoreboard.json?callback=jQuery1124010225989694133197_1497384738587&_=1497384738588"
@@ -40,9 +48,9 @@ $(document).ready(function(){
 		$.getJSON(path_day, function(data){									
 			players={"batters":[], "pitchers":[], "teams":[]};	//reset
 			var calls=[];
-			for (var i = 0; i<data.data.games.game.length; i++){
-				if (data.data.games.game[i].status=="Final"){
-					var path_game =  "http://gd2.mlb.com/" + data.data.games.game[i].game_data_directory + "/boxscore.json";
+			for (var i = 0; i<data.dates[0].games.length; i++){
+				if (data.dates[0].games[i].status.codedGameState=="F"){
+					var path_game = "https://statsapi.mlb.com/api/v1/game/" + data.dates[0].games[i].gamePk + "/boxscore";
 					calls.push(GetGameData(path_game, players));	//put all function calls (deferred objects) into array to run logic once all are done (cause getJSON is asynchronous)
 				}
 			}			
@@ -73,26 +81,22 @@ $(document).ready(function(){
 	
 	function GetGameData(path, players){
 		var deferred = $.getJSON(path, function(data) {		//https://api.jquery.com/category/deferred-object/  &  http://api.jquery.com/jquery.ajax/
-
-			for (var i =0; i<=1; i++){			//add team names
-				for (var j=0; j<data.data.boxscore.batting[i].batter.length; j++){
-					data.data.boxscore.batting[i].batter[j].team = data.data.boxscore.batting[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
-				}
-				if (Array.isArray(data.data.boxscore.pitching[i].pitcher)){
-					for (j=0; j<data.data.boxscore.pitching[i].pitcher.length; j++){
-						data.data.boxscore.pitching[i].pitcher[j].team = data.data.boxscore.pitching[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
+			
+			for (var i=0; i<=1; i++){		//ONLY TAKE FROM THE PLAYERS OBJECT THOSE IDS THAT APPEAR IN BATTERS/PITCHERS ARRAYS, AND ADD TEAM NAME
+				var homeAway = i==0 ? "home" : "away";
+				players.teams.push({short: data.teams[homeAway].team.abbreviation, long: data.teams[homeAway].team.shortName});
+				
+				for (var j=0; j<=1; j++){
+					var battersPitchers = j==0? "batters" : "pitchers";
+					
+					for (var k=0; k<data.teams[homeAway][battersPitchers].length; k++){
+						var player = data.teams[homeAway].players["ID" + data.teams[homeAway][battersPitchers][k]];
+						player.team = data.teams[homeAway].team.abbreviation;
+						player.name = player.person.fullName;
+						players[battersPitchers].push(player);
 					}
-				}else{		//WHEN ONE PITCHER (COMPLETE GAME) IT'S A SINGLE OBJECT INSTEAD OF ARRAY
-					data.data.boxscore.pitching[i].pitcher.team = data.data.boxscore.pitching[i].team_flag=="home" ? data.data.boxscore.home_team_code.toUpperCase() : data.data.boxscore.away_team_code.toUpperCase();
 				}
-			}
-			
-			players.batters = players.batters.concat(data.data.boxscore.batting[0].batter, data.data.boxscore.batting[1].batter) ;		//COMBINE HOME AND AWAY BATTERS
-			players.pitchers = players.pitchers.concat(data.data.boxscore.pitching[0].pitcher, data.data.boxscore.pitching[1].pitcher) ;	
-			
-			players.teams.push({short: data.data.boxscore.home_team_code.toUpperCase(), long: data.data.boxscore.home_sname});
-			players.teams.push({short: data.data.boxscore.away_team_code.toUpperCase(), long: data.data.boxscore.away_sname});
-			
+			}			
 		}).done(function(){
 			//console.log(players.batters.length);
 			//return players.batters.length;
@@ -108,13 +112,19 @@ $(document).ready(function(){
 	
 	function WriteBatters(fields, players){
 		for (var i=0; i<players.length; i++){
-			if(players[i].pos != "P") {
-				//console.log(players[i].name_display_first_last);
+			if(players[i].position.abbreviation != "P") {
+				//console.log(players[i].person.fullName);
 				var row = row + "<tr class='" + players[i].team + "'>";
-				row += "<td><a href='http://m.mlb.com/player/" + players[i].id + "' target=_'blank'>" + players[i].name_display_first_last + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
+				row += "<td><a href='http://m.mlb.com/player/" + players[i].person.id + "' target=_'blank'>" + players[i].person.fullName + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
 				for (var j=1; j<fields.length; j++){
-					row= row +  "<td>" + players[i][fields[j]] + "</td>";
-					//row= row +  "<td class=' " + players[i].team + " '>" + players[i][fields[j]] + "</td>";
+					if (fields[j]=="name" || fields[j]=="team"){
+						var value = players[i][fields[j]];
+					}else if (fields[j].startsWith("s_")){		//SEASON STATS
+						value = players[i].seasonStats.batting[fields[j].substr(2)];		//USE substr TO IGNORE THE s_ PREFIX
+					}else{
+						value = players[i].stats.batting[fields[j]]; 
+					}
+					row= row +  "<td>" + value + "</td>";
 				}
 				row = row + "</tr>";
 			}
@@ -126,12 +136,16 @@ $(document).ready(function(){
 		for (var i=0; i<players.length; i++){
 			
 			var row = row + "<tr class='" + players[i].team + "'>";
-			row += "<td><a href='http://m.mlb.com/player/" + players[i].id + "' target=_'blank'>" + players[i].name_display_first_last + (players[i].note? " " + players[i].note: "")  + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
+			row += "<td><a href='http://m.mlb.com/player/" + players[i].person.id + "' target=_'blank'>" + players[i].person.fullName + (players[i].stats.pitching.note? " " + players[i].stats.pitching.note: "")  + "</a></td>";	//https://www.w3schools.com/html/html_links.asp
 			
 			for (var j=1; j<fields.length; j++){
-				var value = players[i][fields[j]];
-				//if (players[i].note && fields[j]=="name_display_first_last") value += " " + players[i].note;
-				if (fields[j]=="out") value = Math.floor(value/3) + (value % 3 > 0 ? "." + value % 3 : null) ;
+				if (fields[j]=="name" || fields[j]=="team"){
+						var value = players[i][fields[j]];
+					}else if (fields[j].startsWith("s_")){		//SEASON STATS
+						value = players[i].seasonStats.pitching[fields[j].substr(2)];		//USE substr TO IGNORE THE s_ PREFIX
+					}else{
+						value = players[i].stats.pitching[fields[j]]; 
+					}
 				row= row +  "<td>" + value + "</td>";
 			}
 			row = row + "</tr>";
@@ -148,12 +162,17 @@ $(document).ready(function(){
 	}
 	
 	function NameSort(a, b){
-		var a_name = a.name + a.name_display_first_last.slice(0, a.name_display_first_last.search(" "));
-		var b_name = b.name + b.name_display_first_last.slice(0, b.name_display_first_last.search(" "));
+		
+		var a_name = a.name.split(" ");
+		a_name = a_name[1] + a_name[0];	//REVERSE LASTNAME-FIRSTNAME
+		
+		var b_name = b.name.split(" ");
+		b_name = b_name[1] + b_name[0];
+		
 		return (a_name < b_name ? -1: a_name > b_name ? 1: 0 );
 	}
 	
-	function PropSort(prop){			//http://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+	function PropSort(prop, stats, battingPitching){			//http://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
 		if (prop=="name") return NameSort
 		else if (prop=="team"){		//text sort
 			return function (a, b) {
@@ -162,7 +181,7 @@ $(document).ready(function(){
 		} else{									//numerical sort
 			return function (a, b) {
 				//return (a[prop] < b[prop] ? 1: a[prop] > b[prop] ? -1:  NameSort(a, b));		//DESCENDING ORDER, IF TIE SORT BY NAME
-				return (b[prop] - a[prop] !=0 ? b[prop] - a[prop] : NameSort(a, b));		//DESCENDING ORDER, IF TIE SORT BY NAME
+				return (b[stats][battingPitching][prop] - a[stats][battingPitching][prop] !=0 ? b[stats][battingPitching][prop] - a[stats][battingPitching][prop] : NameSort(a, b));		//DESCENDING ORDER, IF TIE SORT BY NAME
 			}
 		}
 	};
@@ -193,29 +212,66 @@ $(document).ready(function(){
 		$("#chart th").removeClass("selected");
 		$(this).addClass("selected");
 		
-		var arr = $("#batters").css("display")=="none" ? players.pitchers: players.batters ;
+		var arr = $("#batters").css("display")=="none" ? players.pitchers: players.batters ;	
+		var battingPitching = $("#batters").css("display")=="none" ? "pitching": "batting";
 		
 		switch (field){
+			case "AB":
+				field = "atBats"; break;
+			case "R":
+				field = "runs"; break;
+			case "H":
+				field = "hits"; break;
+			case "BB":
+				field = "baseOnBalls"; break;
+			case "SO":
+				field = "strikeOuts"; break;
+			case "SB":
+				field = "stolenBases"; break;
 			case "2B": 
-				field = "d"; break;
+				field = "doubles"; break;
 			case "3B": 
-				field = "t"; break;
+				field = "triples"; break;
+			case "HR":
+				field = "homeRuns"; break;
 			case "HRs":
-				field = "s_hr"; break;
+				field = "s_homeRuns"; break;
 			case "Rs":
-				field = "s_r"; break;
+				field = "s_runs"; break;
 			case "RBIs":
 				field = "s_rbi"; break;
+			case "OBP":
+				field = "s_obp"; break;
+			case "SLG":
+				field = "s_slg"; break;
 			case "Ks":
-				field = "s_so"; break;
+				field = "s_strikeOuts"; break;
 			case "IP":
-				field = "out"; break;
+				field = "inningsPitched"; break;
+			case "ER":
+				field = "earnedRuns"; break;
+			case "ERA":
+				field = "s_era"; break;
 			case "IPs":
-				field = "s_ip"; break;
+				field = "s_inningsPitched"; break;
+			case "W":
+				field = "s_wins"; break;
+			case "SV":
+				field = "s_saves"; break;
+			case "HLD":
+				field = "s_holds"; break;
 			default:
 				field = field.toLowerCase();
 		}
-		arr.sort(PropSort(field));
+		
+		if (field.startsWith("s_")){
+			field = field.substr(2);
+			var stats = "seasonStats";
+		}else{
+			stats = "stats";
+		}
+		
+		arr.sort(PropSort(field, stats, battingPitching));
 		
 		if ($("#batters").css("display")=="none"){
 			$("#p_body").empty();
