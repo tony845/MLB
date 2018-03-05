@@ -5,7 +5,7 @@ $(document).ready(function(){
 	var startDate = new Date();
 	startDate.setMonth(startDate.getMonth()-1);
 	startDate.setDate(1);
-	if (startDate > new Date(2017,8,1)) startDate = new Date(2017,8,1);
+	//if (startDate > new Date(2017,8,1)) startDate = new Date(2017,8,1);
 	
 	$("#datepicker").val((startDate.getMonth()+1) + "/" + startDate.getDate() + "/" + startDate.getFullYear() );	
 	
@@ -95,28 +95,32 @@ $(document).ready(function(){
 		if (month<10) month = "0" + month;
 		var day = today.getDate();
 		if (day<10) day = "0" + day;
-		var date = year + "_" + month + "_" + day;
-		var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
+		//var date = year + "_" + month + "_" + day;
+		//var path_day = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/miniscoreboard.json";
+		var date = month + "/" + day + "/" + year;
+		var path_day = "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=" + date
 		
 		var deferred = $.getJSON(path_day, function(json){
 			
-			if (json.data.games.game==undefined) return;
+			if (json.totalGames==0) return;
 			
-			for (var i = 0; i<json.data.games.game.length; i++){
-				var game = json.data.games.game[i];
+			for (var i = 0; i<json.dates[0].games.length; i++){
+				if (json.dates[0].games[i].status.codedGameState != 'F') continue;
+				var game = json.dates[0].games[i].teams;
+				var gameDate = json.dates[0].date.replace(/-/g, "/");
 				
-				if (!teams[game.home_team_city]) teams[game.home_team_city]=[];
-				if (!teams[game.away_team_city]) teams[game.away_team_city]=[];
+				if (!teams[game.home.team.name]) teams[game.home.team.name]=[];
+				if (!teams[game.away.team.name]) teams[game.away.team.name]=[];
 				
 				//game.home_team_runs = Math.min(game.home_team_runs, 13);
 				//game.away_team_runs = Math.min(game.away_team_runs, 13);
-				if ((teams[game.home_team_city][game.home_team_runs]==null || game.original_date < teams[game.home_team_city][game.home_team_runs])
-					&& game.home_team_runs<=13){
-					teams[game.home_team_city][game.home_team_runs] = game.original_date;
+				if ((teams[game.home.team.name][game.home.score]==null || gameDate < teams[game.home.team.name][game.home.score])
+					&& game.home.score<=13){
+					teams[game.home.team.name][game.home.score] = gameDate;
 				}
-				if ((teams[game.away_team_city][game.away_team_runs]==null || game.original_date < teams[game.away_team_city][game.away_team_runs])
-					&& game.away_team_runs<=13){
-					teams[game.away_team_city][game.away_team_runs] = game.original_date;
+				if ((teams[game.away.team.name][game.away.score]==null || gameDate < teams[game.away.team.name][game.away.score])
+					&& game.away.score<=13){
+					teams[game.away.team.name][game.away.score] = gameDate;
 				}
 			}
 		});
@@ -144,36 +148,36 @@ $(document).ready(function(){
 	*/
 	
 	function SetNames(){
-		return {"LA Angels":"Alex",
-				"Arizona":"Frockers",
-				"Colorado":"VJ",
-				"Oakland":"Shrugs",
-				"San Francisco":"PTK",
-				"Seattle":"Arun",
-				"Tampa Bay":"PTK",
-				"Atlanta":"Arun",
-				"Chi Cubs":"Tony",
-				"Cincinnati":"Eric",
-				"Cleveland":"Shrugs",
-				"Houston":"Chris",
-				"LA Dodgers":"Tim",
-				"Milwaukee":"Tony",
-				"Minnesota":"Alex",
-				"NY Yankees":"Paul",
-				"San Diego":"Arun",
-				"Texas":"Tom",
-				"Toronto":"Tom",
-				"Washington":"Pete M",
-				"Boston":"Tim",
-				"Chi White Sox":"Arun",
-				"Detroit":"Khanh",
-				"Miami":"Khanh",
-				"Kansas City":"VJ",
-				"NY Mets":"Chris",
-				"Philadelphia":"Frockers",
-				"Pittsburgh":"Eric",
-				"St. Louis":"Paul",
-				"Baltimore":"Pete M"
+		return {"Los Angeles Angels":"Alex",
+				"Arizona Diamondbacks":"Frockers",
+				"Colorado Rockies":"VJ",
+				"Oakland Athletics":"Shrugs",
+				"San Francisco Giants":"PTK",
+				"Seattle Mariners":"Arun",
+				"Tampa Bay Rays":"PTK",
+				"Atlanta Braves":"Arun",
+				"Chicago Cubs":"Tony",
+				"Cincinnati Reds":"Eric",
+				"Cleveland Indians":"Shrugs",
+				"Houston Astros":"Chris",
+				"Los Angeles Dodgers":"Tim",
+				"Milwaukee Brewers":"Tony",
+				"Minnesota Twins":"Alex",
+				"New York Yankees":"Paul",
+				"San Diego Padres":"Arun",
+				"Texas Rangers":"Tom",
+				"Toronto Blue Jays":"Tom",
+				"Washington Nationals":"Pete M",
+				"Boston Red Sox":"Tim",
+				"Chicago White Sox":"Arun",
+				"Detroit Tigers":"Khanh",
+				"Miami Marlins":"Khanh",
+				"Kansas City Royals":"VJ",
+				"New York Mets":"Chris",
+				"Philadelphia Phillies":"Frockers",
+				"Pittsburgh Pirates":"Eric",
+				"St. Louis Cardinals":"Paul",
+				"Baltimore Orioles":"Pete M"
 		}
 	}
 	
